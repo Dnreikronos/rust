@@ -265,6 +265,10 @@ pub(crate) struct NotCircumventFeature;
 pub(crate) struct LinkerPluginToWindowsNotSupported;
 
 #[derive(Diagnostic)]
+#[diag("`-Zassumptions-on-binders` requires `-Znext-solver=globally`")]
+pub(crate) struct AssumptionsOnBindersRequiresNextSolver;
+
+#[derive(Diagnostic)]
 #[diag("file `{$path}` passed to `-C profile-use` does not exist")]
 pub(crate) struct ProfileUseFileDoesNotExist<'a> {
     pub(crate) path: &'a std::path::Path,

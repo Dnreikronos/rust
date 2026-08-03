@@ -1,0 +1,2 @@
+error: `-Zassumptions-on-binders` requires `-Znext-solver=globally`
+

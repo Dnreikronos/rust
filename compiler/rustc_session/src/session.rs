@@ -1710,6 +1710,17 @@ fn validate_commandline_args_with_session_available(sess: &Session) {
             });
         }
     }
+
+    // `-Zassumptions-on-binders` reroutes region solving through the next solver's
+    // region-constraint machinery, which is only wired up when the next solver is enabled
+    // globally. Without it the flag hits `assert!(self.next_trait_solver())` during regionck
+    // (see `destructure_solver_region_constraints`), so reject the combination up front. This
+    // must be fatal: `emit_err` would still let analysis run and trip that assertion.
+    if sess.opts.unstable_opts.assumptions_on_binders
+        && !sess.opts.unstable_opts.next_solver.globally
+    {
+        sess.dcx().emit_fatal(diagnostics::AssumptionsOnBindersRequiresNextSolver);
+    }
 }
 
 /// Holds data on the current incremental compilation session, if there is one.
