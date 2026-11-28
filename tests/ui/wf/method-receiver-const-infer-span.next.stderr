@@ -1,0 +1,152 @@
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:19:5
+   |
+LL |     fn deref(&self) -> &'a Self::Target {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:19:5
+   |
+LL |     fn deref(&self) -> &'a Self::Target {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:19:5
+   |
+LL |     fn deref(&self) -> &'a Self::Target {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0046]: not all trait items implemented, missing: `Target`
+  --> $DIR/method-receiver-const-infer-span.rs:16:1
+   |
+LL | impl<'a, const N: u8> Deref for dyn Foo {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `Target` in implementation
+   |
+   = help: implement the missing item: `type Target = /* Type */;`
+
+error[E0207]: the const parameter `N` is not constrained by the impl trait, self type, or predicates
+  --> $DIR/method-receiver-const-infer-span.rs:16:10
+   |
+LL | impl<'a, const N: u8> Deref for dyn Foo {
+   |          ^^^^^^^^^^^ unconstrained const parameter
+   |
+   = note: expressions using a const parameter must map each value to a distinct output value
+   = note: proving the result of expressions other than the parameter are unique is not supported
+
+error[E0046]: not all trait items implemented, missing: `Assoc`
+  --> $DIR/method-receiver-const-infer-span.rs:34:1
+   |
+LL |     type Assoc: ?Sized;
+   |     ------------------ `Assoc` from trait
+...
+LL | impl<const N: u8> Bar for dyn Foo {}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `Assoc` in implementation
+
+error[E0207]: the const parameter `N` is not constrained by the impl trait, self type, or predicates
+  --> $DIR/method-receiver-const-infer-span.rs:34:6
+   |
+LL | impl<const N: u8> Bar for dyn Foo {}
+   |      ^^^^^^^^^^^ unconstrained const parameter
+   |
+   = note: expressions using a const parameter must map each value to a distinct output value
+   = note: proving the result of expressions other than the parameter are unique is not supported
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:44:5
+   |
+LL |     fn baz(&self) {}
+   |     ^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:44:5
+   |
+LL |     fn baz(&self) {}
+   |     ^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:44:5
+   |
+LL |     fn baz(&self) {}
+   |     ^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0207]: the const parameter `N` is not constrained by the impl trait, self type, or predicates
+  --> $DIR/method-receiver-const-infer-span.rs:42:6
+   |
+LL | impl<const N: u8> Baz for <dyn Foo as Bar>::Assoc {
+   |      ^^^^^^^^^^^ unconstrained const parameter
+   |
+   = note: expressions using a const parameter must map each value to a distinct output value
+   = note: proving the result of expressions other than the parameter are unique is not supported
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:19:24
+   |
+LL |     fn deref(&self) -> &'a Self::Target {
+   |                        ^^^^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:19:24
+   |
+LL |     fn deref(&self) -> &'a Self::Target {
+   |                        ^^^^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:44:12
+   |
+LL |     fn baz(&self) {}
+   |            ^^^^^ cannot infer the value of the constant `_`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:44:12
+   |
+LL |     fn baz(&self) {}
+   |            ^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:44:12
+   |
+LL |     fn baz(&self) {}
+   |            ^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:44:12
+   |
+LL |     fn baz(&self) {}
+   |            ^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:19:24
+   |
+LL |     fn deref(&self) -> &'a Self::Target {
+   |                        ^^^^^^^^^^^^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error[E0284]: type annotations needed
+  --> $DIR/method-receiver-const-infer-span.rs:44:12
+   |
+LL |     fn baz(&self) {}
+   |            ^^^^^ cannot infer the value of the constant `_`
+   |
+   = note: duplicate diagnostic emitted due to `-Z deduplicate-diagnostics=no`
+
+error: aborting due to 19 previous errors
+
+Some errors have detailed explanations: E0046, E0207, E0284.
+For more information about an error, try `rustc --explain E0046`.
