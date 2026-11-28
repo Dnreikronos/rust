@@ -13,7 +13,9 @@ use crate::fold::TypeFoldable;
 use crate::inherent::*;
 use crate::intern::Interned;
 use crate::ir_print::IrPrint;
-use crate::lang_items::{SolverAdtLangItem, SolverProjectionLangItem, SolverTraitLangItem};
+use crate::lang_items::{
+    SolverAdtLangItem, SolverConstProjectionLangItem, SolverProjectionLangItem, SolverTraitLangItem,
+};
 use crate::relate::Relate;
 use crate::search_graph::RequiredDepth;
 use crate::solve::{
@@ -455,6 +457,12 @@ pub trait Interner:
         self,
         def_id: Self::TraitAssocTyId,
         lang_item: SolverProjectionLangItem,
+    ) -> bool;
+
+    fn is_const_projection_lang_item(
+        self,
+        def_id: Self::TraitAssocConstId,
+        lang_item: SolverConstProjectionLangItem,
     ) -> bool;
 
     fn is_trait_lang_item(self, def_id: Self::TraitId, lang_item: SolverTraitLangItem) -> bool;

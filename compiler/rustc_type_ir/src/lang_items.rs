@@ -17,6 +17,11 @@ pub enum SolverProjectionLangItem {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum SolverConstProjectionLangItem {
+    FieldOffset,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum SolverAdtLangItem {
     // tidy-alphabetical-start
     DynMetadata,

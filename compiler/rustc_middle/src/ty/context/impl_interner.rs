@@ -9,7 +9,9 @@ use rustc_hir as hir;
 use rustc_hir::def::{CtorKind, DefKind};
 use rustc_hir::def_id::{DefId, LocalDefId};
 use rustc_span::{DUMMY_SP, Span, Symbol, bug};
-use rustc_type_ir::lang_items::{SolverAdtLangItem, SolverProjectionLangItem, SolverTraitLangItem};
+use rustc_type_ir::lang_items::{
+    SolverAdtLangItem, SolverConstProjectionLangItem, SolverProjectionLangItem, SolverTraitLangItem,
+};
 use rustc_type_ir::solve::CanonicalInputData;
 use rustc_type_ir::{
     BoundVar, CollectAndApply, DebruijnIndex, IncludeSizedImplicitBounds, Interner, RegionVid,
@@ -517,6 +519,17 @@ impl<'tcx> Interner for TyCtxt<'tcx> {
 
     fn is_projection_lang_item(self, def_id: DefId, lang_item: SolverProjectionLangItem) -> bool {
         self.is_lang_item(def_id, solver_lang_item_to_lang_item(lang_item))
+    }
+
+    fn is_const_projection_lang_item(
+        self,
+        def_id: DefId,
+        lang_item: SolverConstProjectionLangItem,
+    ) -> bool {
+        let lang_item = match lang_item {
+            SolverConstProjectionLangItem::FieldOffset => LangItem::FieldOffset,
+        };
+        self.is_lang_item(def_id, lang_item)
     }
 
     fn is_trait_lang_item(self, def_id: DefId, lang_item: SolverTraitLangItem) -> bool {
