@@ -34,7 +34,7 @@ use rustc_middle::ty::{
     TypingMode, Unnormalized, Upcast,
 };
 use rustc_session::diagnostics::feature_err;
-use rustc_span::{DUMMY_SP, Span, bug, span_bug, sym};
+use rustc_span::{Span, bug, span_bug, sym};
 use rustc_trait_selection::error_reporting::InferCtxtErrorExt;
 use rustc_trait_selection::regions::{
     OutlivesEnvironmentBuildExt, region_known_to_outlive, ty_known_to_outlive,
@@ -1770,10 +1770,10 @@ fn check_method_receiver<'tcx>(
 
     debug!("check_method_receiver: sig={:?}", sig);
 
-    let self_ty = wfcx.normalize(DUMMY_SP, loc, Unnormalized::new_wip(self_ty));
+    let self_ty = wfcx.normalize(span, loc, Unnormalized::new_wip(self_ty));
 
     let receiver_ty = sig.inputs()[0];
-    let receiver_ty = wfcx.normalize(DUMMY_SP, loc, Unnormalized::new_wip(receiver_ty));
+    let receiver_ty = wfcx.normalize(span, loc, Unnormalized::new_wip(receiver_ty));
 
     // If the receiver already has errors reported, consider it valid to avoid
     // unnecessary errors (#58712).
