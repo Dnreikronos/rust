@@ -2,7 +2,9 @@ use std::debug_assert_matches;
 
 use rustc_type_ir::fast_reject::DeepRejectCtxt;
 use rustc_type_ir::inherent::*;
-use rustc_type_ir::lang_items::{SolverAdtLangItem, SolverProjectionLangItem, SolverTraitLangItem};
+use rustc_type_ir::lang_items::{
+    SolverAdtLangItem, SolverConstProjectionLangItem, SolverProjectionLangItem, SolverTraitLangItem,
+};
 use rustc_type_ir::solve::{
     FetchEligibleAssocItemResponse, NoSolutionOrRerunNonErased, QueryResultOrRerunNonErased,
     RerunNonErased, RerunReason, RerunResultExt,
@@ -1088,13 +1090,41 @@ where
         else {
             return Err(NoSolution.into());
         };
-        let def_id = goal.predicate.alias.expect_projection_ty_def_id();
-        let ty = match ecx.cx().as_projection_lang_item(def_id) {
-            Some(SolverProjectionLangItem::FieldBase) => base,
-            Some(SolverProjectionLangItem::FieldType) => ty,
-            _ => panic!("unexpected associated type {:?} in `Field`", goal.predicate),
-        };
         ecx.probe_builtin_trait_candidate(BuiltinImplSource::Misc).enter(|ecx| {
+            let ty = match goal.predicate.alias.kind {
+                ty::AliasTermKind::ProjectionTy { def_id } => {
+                    match ecx.cx().as_projection_lang_item(def_id) {
+                        Some(SolverProjectionLangItem::FieldBase) => base,
+                        Some(SolverProjectionLangItem::FieldType) => ty,
+                        _ => panic!("unexpected associated type {:?} in `Field`", goal.predicate),
+                    }
+                }
+                ty::AliasTermKind::ProjectionConst { def_id }
+                    if ecx.cx().is_const_projection_lang_item(
+                        def_id,
+                        SolverConstProjectionLangItem::FieldOffset,
+                    ) =>
+                {
+                    // Unlike `Field::Base` and `Field::Type`, the builtin `Field` impl does not
+                    // synthesize a value for `Field::OFFSET` in the trait solver. Instead, it uses
+                    // the default body from the `Field` trait definition, which calls the
+                    // `field_offset::<Self>()` intrinsic.
+                    //
+                    // Passing `goal.predicate.alias` directly is valid because the default item
+                    // lives on the trait itself (so no argument rebasing is needed), and builtin
+                    // instance resolution maps `Field::OFFSET` to that default body.
+                    // `evaluate_const` then evaluates the intrinsic once `Self` is concrete, stays
+                    // ambiguous on inference variables, and produces a rigid alias when `Self`
+                    // still has generic parameters.
+                    return ecx.evaluate_const(
+                        goal.param_env,
+                        goal.predicate.alias,
+                        goal.predicate.term,
+                        goal.predicate.alias.expect_ct(),
+                    );
+                }
+                _ => panic!("unexpected projection {:?} in `Field`", goal.predicate),
+            };
             ecx.instantiate_normalizes_to_term(goal, ty.into())?;
             ecx.evaluate_added_goals_and_make_canonical_response(Certainty::Yes)
         })
