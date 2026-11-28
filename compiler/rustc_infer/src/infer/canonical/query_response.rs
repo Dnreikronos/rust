@@ -347,8 +347,10 @@ impl<'tcx> InferCtxt<'tcx> {
             .assumptions
             .extend(assumptions.iter().map(|&r_c| instantiate_value(self.tcx, &result_args, r_c)));
 
-        let constraint = instantiate_value(self.tcx, &result_args, solver_constraints.clone());
-        output_query_region_constraints.add_solver_constraints(constraint);
+        if !solver_constraints.is_true() {
+            let constraint = instantiate_value(self.tcx, &result_args, solver_constraints.clone());
+            output_query_region_constraints.add_solver_constraints(constraint);
+        }
 
         let user_result: R =
             query_response.instantiate_projected(self.tcx, &result_args, |q_r| q_r.value.clone());

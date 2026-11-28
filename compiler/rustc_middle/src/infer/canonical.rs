@@ -113,13 +113,18 @@ impl<'tcx> QueryRegionConstraints<'tcx> {
         let QueryRegionConstraints { constraints, assumptions, solver_constraints } = other;
         self.constraints.extend(constraints.iter().cloned());
         self.assumptions.extend(assumptions.iter().cloned());
-        self.add_solver_constraints(solver_constraints.clone());
+        if !solver_constraints.is_true() {
+            self.add_solver_constraints(solver_constraints.clone());
+        }
     }
 
     pub fn add_solver_constraints(
         &mut self,
         constraint: ir::region_constraint::RegionConstraint<TyCtxt<'tcx>>,
     ) {
+        if constraint.is_true() {
+            return;
+        }
         let previous = std::mem::replace(
             &mut self.solver_constraints,
             ir::region_constraint::RegionConstraint::new_true(),
