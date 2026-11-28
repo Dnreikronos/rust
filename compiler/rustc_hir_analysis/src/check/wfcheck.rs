@@ -1767,7 +1767,6 @@ fn check_method_receiver<'tcx>(
 
     let sig = tcx.fn_sig(method.def_id).instantiate_identity().skip_norm_wip();
     let sig = tcx.liberate_late_bound_regions(method.def_id, sig);
-    let sig = wfcx.normalize(DUMMY_SP, loc, Unnormalized::new_wip(sig));
 
     debug!("check_method_receiver: sig={:?}", sig);
 
